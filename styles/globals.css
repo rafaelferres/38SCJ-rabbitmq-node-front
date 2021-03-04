@@ -1,16 +1,30 @@
-html,
 body {
-  padding: 0;
+  background-color: #f7fafc;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
-* {
-  box-sizing: border-box;
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+     
+  input[type="range"]::-webkit-slider-thumb {
+      width: 15px;
+      -webkit-appearance: none;
+  appearance: none;
+      height: 15px;
+      cursor: ew-resize;
+      background: #000;
+      box-shadow: -405px 0 0 400px rgba(236, 72, 153, 1);
+      border-radius: 50%;
+      
+  }
 }
