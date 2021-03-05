@@ -23,8 +23,16 @@ app.prepare()
   })
 
   server.post('/api/send', async (req, res) => {
-    const data = await _rabbitmq.Send('drones.id.41414154', req.body)
-    res.status(201).json({ data: data })
+    try{
+      const data = await _rabbitmq.Send('drones.id.41414154', req.body)
+      if(data){
+        res.status(201).send()
+      }else{
+        res.status(500).send()
+      }
+    }catch(err){
+      res.status(500).json({error: err.message})
+    }
   })
 })
 .catch((ex) => {
