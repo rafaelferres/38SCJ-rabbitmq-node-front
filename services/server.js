@@ -4,11 +4,16 @@ const RabbitMq = require('./rabbitmq')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-    
+const getConfig = require('./config')    
+const config = getConfig();
+const dotenv = require('dotenv')
+
+dotenv.config()
+
 app.prepare()
 .then(async () => {
   const server = express()
-  const _rabbitmq = new RabbitMq('amqp://guest:guest@localhost:5672', 'dronesEmailExchange')
+  const _rabbitmq = new RabbitMq(config.rabbit.connection, config.rabbit.exchange)
   await _rabbitmq.Connect()
 
   server.use(express.json())
