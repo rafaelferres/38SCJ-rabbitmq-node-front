@@ -6,8 +6,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Coleta de Dados - FIAP</title>
       </Head>
       <Header />
       <Form />
