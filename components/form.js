@@ -15,28 +15,35 @@ export default function Form() {
     const [longitude, setLongitude] = React.useState("");
     const [longitudeError, setLongitudeError] = React.useState(false);
 
+    const [dataSend, setDataSend] = React.useState([])
+
     React.useEffect(() => {
         const interval = setInterval(async () => {
-            if(idDrone && ( latitude && latitudeError == false) && (longitude && longitudeError == false) && temperatura && umidade){
-                const rawResponse = await fetch('/api/send', {
+            if(idDrone && ( latitude && latitudeError === false) && (longitude && longitudeError === false) && temperatura && umidade){
+                const data = {
+                    idDrone,
+                    latitude,
+                    longitude,
+                    temperatura,
+                    umidade,
+                    date: new Date()
+                }
+
+                await fetch('/api/send', {
                     method: 'POST',
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        idDrone,
-                        latitude,
-                        longitude,
-                        temperatura,
-                        umidade
-                    })
+                    body: JSON.stringify(data)
                 })
+
+                setDataSend([...dataSend, data])
             }
         }, 10000);
 
         return () => clearInterval(interval);
-    }, [idDrone, latitude, longitude, temperatura, umidade, latitudeError, longitudeError])
+    }, [idDrone, latitude, longitude, temperatura, umidade, latitudeError, longitudeError, setDataSend, dataSend])
 
 
     function setLatitudeValidation(e) {
@@ -73,6 +80,15 @@ export default function Form() {
         else
             setIdDroneError(true)
         
+    }
+
+    function dataAtualFormatada(data){
+        var dia  = data.getDate().toString().padStart(2, '0'),
+            mes  = (data.getMonth()+1).toString().padStart(2, '0'),
+            ano  = data.getFullYear(),
+            hora = data.getHours().toString().padStart(2, '0'),
+            minuto = data.getMinutes().toString().padStart(2, '0');
+        return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
     }
 
     return (
@@ -126,6 +142,45 @@ export default function Form() {
                         </select>
                     </div>
                 </form>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 shadow mt-6">
+                {dataSend.length == 0 && (
+                    <>
+                        Nenhum dado foi enviado.
+                    </>
+                )}
+                {dataSend.length > 0 &&
+                    (<>
+                        <h1 className="font-bold text-lg">Dados enviados:</h1>
+                        <div className="table w-full">
+                            <div className="table-row-group">
+                            <div className="table-row">
+                                <div className="table-cell font-bold">Identificação do Drone</div>
+                                <div className="table-cell font-bold">Latitude</div>
+                                <div className="table-cell font-bold">Longitude</div>
+                                <div className="table-cell font-bold">Temperatura</div>
+                                <div className="table-cell font-bold">Umidade</div>
+                                <div className="table-cell font-bold">Data</div>
+                            </div>
+                            {dataSend.sort((a, b) => b.date.getTime() - a.date.getTime()).map((d,i) => (
+                                <div className="table-row" key={i}>
+                                    <div className="table-cell">{d.idDrone}</div>
+                                    <div className="table-cell">{d.latitude}</div>
+                                    <div className="table-cell">{d.longitude}</div>
+                                    <div className="table-cell">{d.temperatura}ºC</div>
+                                    <div className="table-cell">{d.umidade}%</div>
+                                    <div className="table-cell">{dataAtualFormatada(d.date)}</div>
+                                </div>
+                            
+                            )
+                            )}
+                        
+                            </div>
+                        </div>
+                    </>
+                    )
+                }
             </div>
         </main>
     )
