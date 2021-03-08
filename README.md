@@ -1,34 +1,79 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 38SCJ-rabbitmq-node-service
 
-## Getting Started
+## Sobre
+Trabalho da FIAP - Integrations & Development Tools
 
-First, run the development server:
+## Funcionamento
+A cada 10 segundos é verificado se todas as informações foram preenchidas e são válidas, caso sim é enviado as informações para a exchange (topic), onde o consumer irá verificar se a temperatura é >= 35 ou <= 0 ou a umidade for <= 15, caso caia nessas condições será enviado um e-mail para o destinatario configurado.
 
+## Arquitetura
+O serviço foi divido em duas parte. Uma com Next.js (Front-End e Back-end Producer) e um Consumer.
+![Arquitetura do Serviço](https://i.imgur.com/AmZ2ESs.jpg)
+
+
+## Instalações
+### RabbitMQ
+Rode em seu console o seguinte comando:
+```bash 
+docker run -d --name rabbit -p 5672:5672 -p 5673:5673 -p 15672:15672 rabbitmq:3-management
+```
+### Back-end
+Rode em seu console os seguintes comandos:
 ```bash
-npm run dev
-# or
-yarn dev
+git clone https://github.com/rafaelferres/38SCJ-rabbitmq-node-service.git
+```
+Crie um arquivo chamado .env na raiz do projeto com as seguintes informações
+```bash
+#RABBITMQ
+RABBITMQ_CONNECTION=enderecorabbitmq
+RABBITMQ_QUEUE=dronesEmail
+RABBITMQ_EXCHANGE=dronesEmailExchange
+
+#EMAIL
+SMTP_HOST=enderecosmtp
+SMTP_PORT=portsmtp
+SMTP_USER=usuariosmtp
+SMTP_PASS=senhasmtp
+EMAIL_TO=destinario
+EMAIL_FROM=remetente
+EMAIL_SUBJECT=assuntoemail
+```
+Rode o seguinte comando no seu console para instalar as dependencias:
+```bash
+npm install
+#ou
+yarn
+```
+Inicie o serviço rodando o comando em seu console:
+```bash
+npm run-script start
+#or
+yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Front-end
+Rode em seu console o seguintes comando:
+```bash
+git clone https://github.com/rafaelferres/38SCJ-rabbitmq-node-front.git
+```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Crie um arquivo chamado .env na raiz do projeto com as seguintes informações
+```bash
+#RABBITMQ
+RABBITMQ_CONNECTION=enderecorabbitmq
+RABBITMQ_EXCHANGE=dronesEmailExchange
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Rode o seguinte comando no seu console para instalar as dependencias:
+```bash
+npm install
+#ou
+yarn
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Inicie o serviço rodando o comando em seu console:
+```bash
+npm run-script start
+#or
+yarn start
+```
