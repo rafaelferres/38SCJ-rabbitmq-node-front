@@ -1,4 +1,4 @@
-# 38SCJ-rabbitmq-node-service
+# 38SCJ-rabbitmq-node-front
 
 ## Sobre
 Trabalho da FIAP - Integrations & Development Tools
